@@ -1,5 +1,7 @@
+import { updateRooms } from "../rooms/updateRoom";
 import { RegData, users, wsUser } from "../types/types";
 import { createHmac } from 'crypto';
+import { updateWinners } from "../winners/winners";
 
 export const IDgenerator = ( name: string, password: string): number => {
     const hash = createHmac('sha256', 'BattleShip')
@@ -25,4 +27,6 @@ ws.send(
       id: 0,
     }),
   );
+  updateRooms();
+  updateWinners();
 }

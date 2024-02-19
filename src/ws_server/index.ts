@@ -2,7 +2,9 @@ import { httpServer } from "../http_server/index.js";
 import 'dotenv/config';
 import { RawData, WebSocketServer } from 'ws';
 import { authorization } from "./authorization/authorization.js";
-import { RegData, RegistrationMessage, users, wsUser } from "./types/types.js";
+import { RegData, RegistrationMessage, wsUser } from "./types/types.js";
+import { createRoom } from "./rooms/createRoom.js";
+import { addUser } from "./rooms/AddUserToRoom.js";
 
 //HTTP server
 const HTTP_PORT = 8181;
@@ -25,12 +27,14 @@ wss.on('connection', (ws: wsUser) => {
         switch (type) {
             case 'reg': 
             const user = JSON.parse(data.data) as RegData;
-            authorization(user, ws);
-            console.log(users);
+                authorization(user, ws);
             break;
             case 'create_room':
-                 
+                 createRoom(ws);
             break;
+            case 'add_user_to_room':
+                const { indexRoom } = JSON.parse(data.data) as { indexRoom: string };
+                addUser(indexRoom, ws);
             default:
             break;
         }
