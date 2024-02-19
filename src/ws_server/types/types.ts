@@ -1,3 +1,7 @@
+import WebSocket from 'ws';
+
+export const users: User[] = [];
+
 export type TypeMessage =
 | 'reg' 
 | 'update_winners' 
@@ -21,5 +25,17 @@ export interface RegData {
 export interface RegistrationMessage {
     id: 0;
     type: TypeMessage;
-    data: RegData;
+    data: string;
+  }
+
+  export interface wsUser extends WebSocket {
+    id: string;
+    name:string;
+  }
+
+  export interface User {
+    id: String;
+    name: String;
+    password: String;
+    ws: wsUser;
   }
