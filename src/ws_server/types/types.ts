@@ -1,5 +1,6 @@
 import WebSocket from 'ws';
 
+export const MAP_SIZE = 9;
 export const winners: Winner[] = [];
 export const users: User[] = [];
 export const rooms: Map<string, Room> = new Map();
@@ -82,6 +83,8 @@ export interface RegistrationMessage {
     roomId: string;
     roomUsers: { name: string; index: string }[];
   }
+
+  export type ShipStatus = 'miss' | 'killed' | 'shot';
 
   export interface Winner {
     name: string;

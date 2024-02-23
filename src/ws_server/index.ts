@@ -2,9 +2,12 @@ import { httpServer } from "../http_server/index.js";
 import 'dotenv/config';
 import { RawData, WebSocketServer } from 'ws';
 import { authorization } from "./authorization/authorization.js";
-import { RegData, RegistrationMessage, wsUser } from "./types/types.js";
+import { RegData, RegistrationMessage, Ship, wsUser } from "./types/types.js";
 import { createRoom } from "./rooms/createRoom.js";
 import { addUser } from "./rooms/AddUserToRoom.js";
+import { addShips } from "./ships/ships.js";
+import { attack } from "./attacks/attack.js";
+import { randomAttack } from "./attacks/randomAttack.js";
 
 //HTTP server
 const HTTP_PORT = 8181;
@@ -35,7 +38,32 @@ wss.on('connection', (ws: wsUser) => {
             case 'add_user_to_room':
                 const { indexRoom } = JSON.parse(data.data) as { indexRoom: string };
                 addUser(indexRoom, ws);
+            case 'add_ships':
+                const { gameId, ships, indexPlayer } = JSON.parse(data.data) as {
+                    gameId: string;
+                    ships: Ship[];
+                    indexPlayer: number;
+                  };
+                  addShips(gameId, ships, indexPlayer);
+            break;
+            case 'attack':
+                const attackData = JSON.parse(data.data) as {
+                    gameId: string;
+                    x: number;
+                    y: number;
+                    indexPlayer: 0 | 1;
+                  };
+                  attack({ ...attackData }, ws);
+            break;
+            case 'randomAttack':
+                const randomAttackData = JSON.parse(data.data) as {
+                    gameId: string;
+                    indexPlayer: 0 | 1;
+                    };
+                randomAttack({ ...randomAttackData });
+            break;
             default:
+                console.log('unknown command');
             break;
         }
     });
